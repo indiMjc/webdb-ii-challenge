@@ -1,7 +1,8 @@
 const db = require('../data/dbConfig');
 
 module.exports = {
-  get
+  get,
+  insert
 };
 
 function get(id) {
@@ -14,4 +15,8 @@ function get(id) {
   } else {
     return db.select('*').from('cars');
   }
+}
+
+function insert(car) {
+  return db('cars').insert(car, 'id');
 }

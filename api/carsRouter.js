@@ -35,4 +35,18 @@ router.get('/:id', (req, res) => {
     });
 });
 
+router.post('/', (req, res) => {
+  const car = req.body;
+  CarsDb.insert(car)
+    .then(ids => {
+      return CarsDb.get(ids[0]).then(car => {
+        res.status(201).json(car);
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ error: 'Error adding new car.' });
+    });
+});
+
 module.exports = router;
