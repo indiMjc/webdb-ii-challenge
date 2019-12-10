@@ -21,4 +21,18 @@ router.get('/', (req, res) => {
     });
 });
 
+router.get('/:id', (req, res) => {
+  const { id } = req.params;
+  CarsDb.get(id)
+    .then(car => {
+      car
+        ? res.status(200).json(car)
+        : res.status(404).json({ message: 'Car not found.' });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ error: 'Error while getting car.' });
+    });
+});
+
 module.exports = router;

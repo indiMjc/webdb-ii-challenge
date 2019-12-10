@@ -4,8 +4,8 @@ module.exports = {
   get
 };
 
-function get(carId) {
-  if (carId) {
+function get(id) {
+  if (id) {
     return db
       .select('*')
       .from('cars')
