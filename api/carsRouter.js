@@ -56,4 +56,12 @@ function validateCarData(req, res, next) {
     next();
 }
 
+function validateCarId(req, res, next) {
+  const { id } = req.params;
+  CarsDb.get(id).then(car => {
+    !car && res.status(404).json({ message: 'Car not found.' });
+    next();
+  });
+}
+
 module.exports = router;
