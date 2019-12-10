@@ -35,7 +35,7 @@ router.get('/:id', (req, res) => {
     });
 });
 
-router.post('/', (req, res) => {
+router.post('/', validateCarData, (req, res) => {
   const car = req.body;
   CarsDb.insert(car)
     .then(ids => {
@@ -48,5 +48,12 @@ router.post('/', (req, res) => {
       res.status(500).json({ error: 'Error adding new car.' });
     });
 });
+
+// prettier-ignore
+function validateCarData(req, res, next) {
+    const { vin, make, model, mileage } = req.body;
+    (!vin || !make || !model || !mileage) && res.status(400).json({ message: 'Please provide VIN number, make, model and mileage for car to post.' });
+    next();
+}
 
 module.exports = router;
