@@ -68,6 +68,18 @@ router.put('/:id', validateCarId, validateCarData, (req, res) => {
     });
 });
 
+router.delete('/:id', validateCarId, (req, res) => {
+  const { id } = req.params;
+  CarsDb.remove(id)
+    .then(count => {
+      res.status(200).json({ message: `${count} car(s) removed.` });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ error: 'Error while removing car.' });
+    });
+});
+
 // prettier-ignore
 function validateCarData(req, res, next) {
     const { vin, make, model, mileage } = req.body;
