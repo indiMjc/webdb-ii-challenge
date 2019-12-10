@@ -2,6 +2,8 @@ const express = require('express');
 
 const server = express();
 
+const carsRouter = require('./api/carsRouter');
+
 server.use(express.json());
 
 server.get('/', (req, res) => {
