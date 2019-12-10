@@ -49,6 +49,25 @@ router.post('/', validateCarData, (req, res) => {
     });
 });
 
+router.put('/:id', validateCarId, validateCarData, (req, res) => {
+  const { id } = req.params;
+  const changes = req.body;
+  CarsDb.update(id, changes)
+    .then(count => {
+      if (count) {
+        return CarsDb.get(id).then(car => {
+          res.status(201).json(car);
+        });
+      } else {
+        res.status(404).json({ message: 'Car not found.' });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ error: 'Error while updating car.' });
+    });
+});
+
 // prettier-ignore
 function validateCarData(req, res, next) {
     const { vin, make, model, mileage } = req.body;
