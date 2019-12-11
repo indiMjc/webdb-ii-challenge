@@ -9,11 +9,9 @@ router.use(express.json());
 router.get('/', (req, res) => {
   CarsDb.get()
     .then(cars => {
-      if (cars.length) {
-        res.status(200).json(cars);
-      } else {
-        res.status(404).json({ message: 'No cars found.' });
-      }
+      cars.length
+        ? res.status(200).json(cars)
+        : res.status(404).json({ message: 'No cars found.' });
     })
     .catch(err => {
       console.log(err);
@@ -38,8 +36,8 @@ router.get('/:id', (req, res) => {
 router.post('/', validateCarData, (req, res) => {
   const car = req.body;
   CarsDb.insert(car)
-    .then(ids => {
-      return CarsDb.get(ids[0]).then(car => {
+    .then(id => {
+      return CarsDb.get(id[0]).then(car => {
         res.status(201).json(car);
       });
     })
@@ -54,13 +52,11 @@ router.put('/:id', validateCarId, validateCarData, (req, res) => {
   const changes = req.body;
   CarsDb.update(id, changes)
     .then(count => {
-      if (count) {
-        return CarsDb.get(id).then(car => {
-          res.status(201).json(car);
-        });
-      } else {
-        res.status(404).json({ message: 'Car not found.' });
-      }
+      return count
+        ? CarsDb.get(id).then(car => {
+            res.status(201).json(car);
+          })
+        : res.status(404).json({ message: 'Car not found.' });
     })
     .catch(err => {
       console.log(err);
@@ -83,7 +79,10 @@ router.delete('/:id', validateCarId, (req, res) => {
 // prettier-ignore
 function validateCarData(req, res, next) {
     const { vin, make, model, mileage } = req.body;
-    (!vin || !make || !model || !mileage) && res.status(400).json({ message: 'Please provide VIN number, make, model and mileage for car to post.' });
+    (!vin || !make || !model || !mileage) && res.status(400)
+    .json({ 
+        message: 'Please provide VIN number, make, model and mileage for car to post.' 
+    });
     next();
 }
 
